@@ -1,6 +1,5 @@
 package de.marvinleiers.gameapi.game;
 
-import de.marvinleiers.gameapi.APIMain;
 import de.marvinleiers.gameapi.GameAPI;
 import de.marvinleiers.gameapi.events.GameResetEvent;
 import de.marvinleiers.gameapi.events.GameStartEvent;
@@ -25,6 +24,7 @@ public class Playable implements Game
     private JavaPlugin plugin;
     private String name;
     private boolean hasStarted;
+    private boolean inLobby;
     private Location entryPoint;
 
     private CountdownTimer timer;
@@ -34,6 +34,7 @@ public class Playable implements Game
         this.plugin = plugin;
         this.name = name;
         this.hasStarted = false;
+        this.inLobby = true;
 
         gameConfig = new CustomConfig(plugin.getDataFolder().getPath() + "/games/games.yml");
     }
@@ -41,8 +42,6 @@ public class Playable implements Game
     @Override
     public void start()
     {
-        hasStarted = true;
-
         timer = new CountdownTimer(plugin, 30,
                 () -> {},
                 this::startGame,
@@ -54,6 +53,7 @@ public class Playable implements Game
     private void startGame()
     {
         hasStarted = true;
+        inLobby = false;
 
         for (Player player : players)
         {
@@ -76,6 +76,9 @@ public class Playable implements Game
             GameAPI.gameplayers.remove(player);
             Bukkit.getPluginManager().callEvent(new PlayerGameLeaveEvent(this, player));
         }
+
+        hasStarted = false;
+        inLobby = true;
 
         players.clear();
     }
@@ -142,5 +145,11 @@ public class Playable implements Game
     public boolean hasStarted()
     {
         return hasStarted;
+    }
+
+    @Override
+    public boolean inLobby()
+    {
+        return inLobby;
     }
 }

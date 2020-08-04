@@ -1,7 +1,5 @@
 package de.marvinleiers.gameapi.game;
 
-import de.marvinleiers.gameapi.APIMain;
-import de.marvinleiers.gameapi.utils.CustomConfig;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -31,4 +29,6 @@ public interface Game
     Plugin getPlugin();
 
     boolean hasStarted();
+
+    boolean inLobby();
 }

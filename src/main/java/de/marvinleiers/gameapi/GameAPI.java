@@ -3,6 +3,7 @@ package de.marvinleiers.gameapi;
 import de.marvinleiers.gameapi.game.Game;
 import de.marvinleiers.gameapi.game.GamePlayer;
 import de.marvinleiers.gameapi.game.Playable;
+import de.marvinleiers.gameapi.listeners.GameListener;
 import de.marvinleiers.gameapi.utils.CustomConfig;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -28,6 +29,8 @@ public final class GameAPI
         config = new CustomConfig(plugin.getDataFolder().getPath() + "/config.yml");
         config.addDefault("min-players", 2);
         config.addDefault("max-players", 8);
+
+        plugin.getServer().getPluginManager().registerEvents(new GameListener(), plugin);
     }
 
     public Game getGame(String name)
@@ -61,6 +64,11 @@ public final class GameAPI
         }
 
         return false;
+    }
+
+    public static boolean inGame(Player player)
+    {
+        return gameplayers.containsKey(player);
     }
 
     public static GameAPI getInstance(JavaPlugin plugin)
